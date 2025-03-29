@@ -9,6 +9,13 @@ public class Collectible : MonoBehaviour
 
     int count = 0;
 
+    [SerializeField]
+    private AudioSource audioS;
+
+
+    [SerializeField]
+    private AudioClip clip;
+
 
     private void Awake()
     {
@@ -21,6 +28,9 @@ public class Collectible : MonoBehaviour
         {
             count = count + 1;
             text.text = count.ToString();
+            audioS.clip = clip;
+            audioS.Play();
+
             Destroy(collision.gameObject);
         }
     }
