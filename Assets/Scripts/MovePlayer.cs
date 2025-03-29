@@ -25,20 +25,19 @@ public class MovePlayer : MonoBehaviour
     [SerializeField]
     private LayerMask ground;
 
-    private Camera cam;
+    [SerializeField]
+    public Vector3 iniPosition;
+
 
     private void Awake()
     {
         anim = GetComponent<Animator>();
         body = GetComponent<Rigidbody2D>();
-
-        cam = FindAnyObjectByType(typeof(Camera)) as Camera;
     }
 
     void Update()
     {
         
-
         if(Input.GetKey(KeyCode.RightArrow) )
         {
             if (transform.localScale.x < 0)
@@ -87,6 +86,13 @@ public class MovePlayer : MonoBehaviour
         }
 
         isGrounded = Physics2D.OverlapCircle(checker.position, radioChecker, ground);
+
+        float state = transform.position.y;
+        if (state <= -6)
+        {
+            transform.position = iniPosition;
+        }
+
 
     }
 

@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - collectible
+  - coins
   layers:
   - Default
   - TransparentFX
@@ -11,7 +13,7 @@ TagManager:
   - background
   - Water
   - UI
-  - 
+  - collectibles
   - ground
   - 
   - 
@@ -49,6 +51,12 @@ TagManager:
     locked: 0
   - name: player
     uniqueID: 224437557
+    locked: 0
+  - name: collectibles
+    uniqueID: 550892385
+    locked: 0
+  - name: UI
+    uniqueID: 865774343
     locked: 0
   m_RenderingLayers:
   - Default
