@@ -2,11 +2,8 @@ using UnityEngine;
 
 public class MovePlayer : MonoBehaviour
 {
-    [SerializeField]
-    private float move = 2.5F;
-
-    [SerializeField]
-    private float jump = 5F;
+    [SerializeField] private float speed = 2.5F;
+    [SerializeField]private float jump = 5F;
 
     private Animator anim;
     private Rigidbody2D body;
@@ -14,70 +11,52 @@ public class MovePlayer : MonoBehaviour
     private int jumpCount = 2;
 
     [SerializeField]
-    private Transform checker;
-
-    [SerializeField]
-    private float radioChecker;
-
-    [SerializeField]
-    private bool isGrounded;
-
-    [SerializeField]
-    private LayerMask ground;
-
-    [SerializeField]
     public Vector3 iniPosition;
 
+    [Header ("Ground")]
+    [SerializeField] private Transform checker;
+    [SerializeField] private float radioChecker;
+    [SerializeField] private bool isGrounded;
+    [SerializeField] private LayerMask ground;
 
     private void Awake()
     {
-        anim = GetComponent<Animator>();
+        anim = GetComponentInChildren<Animator>();
         body = GetComponent<Rigidbody2D>();
     }
 
     void Update()
     {
-        
-        if(Input.GetKey(KeyCode.RightArrow) )
+        float horizontalInput = Input.GetAxis("Horizontal");
+        body.linearVelocity = new Vector2(horizontalInput * speed, body.linearVelocity.y);
+
+        if(horizontalInput > 0.01f)
         {
-            if (transform.localScale.x < 0)
-            {
-                transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
-            }
-
-            if(isGrounded == true ) animationState("walk");// que no se sobrescriba el salto
-
-            body.linearVelocity = new Vector2(+move, body.linearVelocity.y);
-        }
-        
-        if (Input.GetKey(KeyCode.LeftArrow))
+            transform.localScale = Vector3.one;
+        }else if (horizontalInput < -0.01f)
         {
-            if (transform.localScale.x > 0)
-            {
-                transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
-            }
-
-            if (isGrounded == true ) animationState("walk");
-
-            body.linearVelocity = new Vector2(-move, body.linearVelocity.y);
-
+            transform.localScale = new Vector3(-1,1,1);
         }
+
+        if (horizontalInput != 0) anim.SetBool("walk", true); else anim.SetBool("walk", false);
 
         if (Input.GetKeyDown(KeyCode.Space) && (jumpCount > 1 || isGrounded == true))
         {
-            animationState("jump");
-            body.linearVelocity = new Vector2(body.linearVelocity.x, +jump);
+            anim.SetBool("jump", true);
+            body.linearVelocity = new Vector2(body.linearVelocity.x, jump);
             jumpCount--;
+            isGrounded = false;
         }
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            animationState("attack");
+            anim.SetBool("attack", true);
         }
 
         if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.LeftArrow) || anim.GetCurrentAnimatorStateInfo(0).IsName("penguin_jump") || anim.GetCurrentAnimatorStateInfo(0).IsName("penguin_atack"))
         {
-            animationState("idle");
+            anim.SetBool("jump", false);
+            anim.SetBool("attack", false);
         }
 
         if (isGrounded == true)
@@ -96,42 +75,4 @@ public class MovePlayer : MonoBehaviour
 
     }
 
-    private void animationState(string name)
-    {
-        switch (name)
-        {
-
-            case "walk":
-                anim.SetBool("idle", false);
-                anim.SetBool("jump", false);
-                anim.SetBool("attack", false);
-                anim.SetBool("walk", true);
-                break;
-
-            case "jump":
-                anim.SetBool("walk", false);
-                anim.SetBool("idle", false);
-                anim.SetBool("attack", false);
-                anim.SetBool("jump", true);
-                break;
-
-            case "attack":
-                anim.SetBool("walk", false);
-                anim.SetBool("idle", false);
-                anim.SetBool("jump", false);
-                anim.SetBool("attack", true);
-                break;
-
-            case "idle":
-                anim.SetBool("walk", false);
-                anim.SetBool("jump", false);
-                anim.SetBool("attack", false);
-                anim.SetBool("idle", true);
-                break;
-
-            default:
-                break;
-        }
-
-    }
 }

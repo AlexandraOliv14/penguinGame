@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class Collectible : MonoBehaviour
 {
-
     [SerializeField] private TMP_Text text;
     [SerializeField] private AudioClip soundCoins;
 
