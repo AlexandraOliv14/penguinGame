@@ -38,14 +38,9 @@ public class MovePlayer : MonoBehaviour
             transform.localScale = new Vector3(-1,1,1);
         }
 
-        if (horizontalInput != 0) anim.SetBool("walk", true); else anim.SetBool("walk", false);
-
         if (Input.GetKeyDown(KeyCode.Space) && (jumpCount > 1 || isGrounded == true))
         {
-            anim.SetBool("jump", true);
-            body.linearVelocity = new Vector2(body.linearVelocity.x, jump);
-            jumpCount--;
-            isGrounded = false;
+            Jump();
         }
 
         if (Input.GetKeyDown(KeyCode.E))
@@ -66,6 +61,7 @@ public class MovePlayer : MonoBehaviour
 
         isGrounded = Physics2D.OverlapCircle(checker.position, radioChecker, ground);
 
+
         float state = transform.position.y;
         if (state <= -6)
         {
@@ -73,6 +69,21 @@ public class MovePlayer : MonoBehaviour
         }
 
 
+        //if (horizontalInput != 0) anim.SetBool("walk", true); else anim.SetBool("walk", false);
+        anim.SetBool("walk", horizontalInput != 0);
+        anim.SetBool("idle", isGrounded);
+
+
     }
+
+    private void Jump()
+    {
+        body.linearVelocity = new Vector2(body.linearVelocity.x, jump);
+        anim.SetTrigger("jump");
+        jumpCount--;
+        isGrounded = false;
+    }
+
+
 
 }
