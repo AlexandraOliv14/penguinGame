@@ -10,8 +10,9 @@ public class MovePlayer : MonoBehaviour
 
     private int jumpCount = 2;
 
-    [SerializeField]
-    public Vector3 iniPosition;
+
+    [SerializeField] private Camera cameraPos;
+    [SerializeField] private float velocidad = 1 ;
 
     [Header ("Ground")]
     [SerializeField] private Transform checker;
@@ -19,8 +20,16 @@ public class MovePlayer : MonoBehaviour
     [SerializeField] private bool isGrounded;
     [SerializeField] private LayerMask ground;
 
+    private Vector3 iniPosCam;
+    private Vector3 iniPosPlay;
+
+    private string state="live";
+
     private void Awake()
     {
+        iniPosCam = cameraPos.transform.position;
+        iniPosPlay = transform.position;
+
         anim = GetComponentInChildren<Animator>();
         body = GetComponent<Rigidbody2D>();
     }
@@ -62,12 +71,24 @@ public class MovePlayer : MonoBehaviour
         isGrounded = Physics2D.OverlapCircle(checker.position, radioChecker, ground);
 
 
-        float state = transform.position.y;
-        if (state <= -6)
+        if (transform.position.y <= -6)
         {
-            transform.position = iniPosition;
+            state = "dead";
+            transform.position = new Vector3(transform.position.x,0 ,transform.position.z);
+            GetComponent<Collider2D>().enabled = false;
         }
 
+        if(state == "dead")
+        {
+            cameraPos.transform.position = Vector3.MoveTowards(cameraPos.transform.position, iniPosCam, Time.deltaTime * velocidad);
+            transform.position = Vector3.MoveTowards(new Vector3(transform.position.x, 0, transform.position.z), iniPosPlay, Time.deltaTime * velocidad); ;
+
+        }
+        if (Vector3.Distance(transform.position, iniPosPlay) < 0.01f)
+        {
+            state = "live";
+            GetComponent<Collider2D>().enabled = true;
+        }
 
         //if (horizontalInput != 0) anim.SetBool("walk", true); else anim.SetBool("walk", false);
         anim.SetBool("walk", horizontalInput != 0);

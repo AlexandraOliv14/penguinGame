@@ -24,6 +24,15 @@ public class Collectible : MonoBehaviour
 
             Destroy(collision.gameObject);
         }
+        if (collision.gameObject.tag == "shark")
+        {
+            //PausarJuego();
+        }
+    }
+
+    private void PausarJuego()
+    {
+        Time.timeScale = 0f;
     }
 
 }

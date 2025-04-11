@@ -45,7 +45,7 @@ Controla a un pingüino a través de un mundo nevado, salta plataformas, recolec
 
     🔧 Motor: **Unity 6 (6000.0.36f1)**
     💻 Lenguaje: **C#**
-     🎮 Editor: `Unity Hub`
+    🎮 Editor: `Unity Hub`
     📁 Sistema de escenas: `MainScene.unity`
 
 <br/>
