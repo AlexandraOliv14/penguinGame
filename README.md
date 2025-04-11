@@ -19,30 +19,34 @@ Controla a un pingüino a través de un mundo nevado, salta plataformas, recolec
 
 ## 🚀 Características
 
-- ❄️ Escenario invernal con árboles nevados
-  
-- 🐧 Protagonista carismático (pingüino)
-- 🪙 Monedas coleccionables con icono de corona
-- 🎵 Música de fondo y efectos sonoros para juegos casuales
-- 📌 Señales direccionales que guían el camino
-- 🎨 Animaciones suaves y tilesets bien definidos
+    ❄️ Escenario invernal con árboles nevados
+
+    🐧 Protagonista carismático (pingüino)
+
+    🪙 Monedas coleccionables con icono de corona
+
+    🎵 Música de fondo y efectos sonoros para juegos casuales
+
+    📌 Señales direccionales que guían el camino
+
+    🎨 Animaciones suaves y tilesets bien definidos
 
 <br/>
 
 ## 🕹️ Controles
 
-* ⬅️ o (A) / ➡️ o (D): Moverse a la izquierda/derecha
+    ⬅️ o (A) / ➡️ o (D): Moverse a la izquierda/derecha
 
-* Barra espaciadora: Saltar
+    Barra espaciadora: Saltar
 
 <br/>
 
 ## 🛠️ Tecnologías utilizadas
 
-- 🔧 Motor: **Unity 6 (6000.0.36f1)**
-- 💻 Lenguaje: **C#**
-- 🎮 Editor: `Unity Hub`
-- 📁 Sistema de escenas: `MainScene.unity`
+    🔧 Motor: **Unity 6 (6000.0.36f1)**
+    💻 Lenguaje: **C#**
+     🎮 Editor: `Unity Hub`
+    📁 Sistema de escenas: `MainScene.unity`
 
 <br/>
 
