@@ -24,6 +24,7 @@ public class MovePlayer : MonoBehaviour
     private Vector3 iniPosPlay;
 
     private string state="live";
+    public bool attack= false;
 
     private void Awake()
     {
@@ -54,31 +55,35 @@ public class MovePlayer : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            anim.SetBool("attack", true);
+            Attack();
         }
 
-        if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.LeftArrow) || anim.GetCurrentAnimatorStateInfo(0).IsName("penguin_jump") || anim.GetCurrentAnimatorStateInfo(0).IsName("penguin_atack"))
+        AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
+        if (attack && stateInfo.IsName("attack") && stateInfo.normalizedTime >= 1.0f)
         {
-            anim.SetBool("jump", false);
-            anim.SetBool("attack", false);
+            attack = false;
         }
 
-        if (isGrounded == true)
-        {
-            jumpCount = 2;
-        }
+        Grounded();
 
-        isGrounded = Physics2D.OverlapCircle(checker.position, radioChecker, ground);
+        StateManager();
+
+        anim.SetBool("walk", horizontalInput != 0);
+        anim.SetBool("idle", isGrounded);
 
 
+    }
+
+    private void StateManager()
+    {
         if (transform.position.y <= -6)
         {
             state = "dead";
-            transform.position = new Vector3(transform.position.x,0 ,transform.position.z);
+            transform.position = new Vector3(transform.position.x, 0, transform.position.z);
             GetComponent<Collider2D>().enabled = false;
         }
 
-        if(state == "dead")
+        if (state == "dead")
         {
             cameraPos.transform.position = Vector3.MoveTowards(cameraPos.transform.position, iniPosCam, Time.deltaTime * velocidad);
             transform.position = Vector3.MoveTowards(new Vector3(transform.position.x, 0, transform.position.z), iniPosPlay, Time.deltaTime * velocidad); ;
@@ -89,14 +94,17 @@ public class MovePlayer : MonoBehaviour
             state = "live";
             GetComponent<Collider2D>().enabled = true;
         }
-
-        //if (horizontalInput != 0) anim.SetBool("walk", true); else anim.SetBool("walk", false);
-        anim.SetBool("walk", horizontalInput != 0);
-        anim.SetBool("idle", isGrounded);
-
-
     }
 
+    private void Grounded()
+    {
+        if (isGrounded == true)
+        {
+            jumpCount = 2;
+        }
+
+        isGrounded = Physics2D.OverlapCircle(checker.position, radioChecker, ground);
+    }
     private void Jump()
     {
         body.linearVelocity = new Vector2(body.linearVelocity.x, jump);
@@ -105,6 +113,11 @@ public class MovePlayer : MonoBehaviour
         isGrounded = false;
     }
 
+    private void Attack()
+    {
+        attack = true;
+        anim.SetTrigger("attack");
+    }
 
 
 }

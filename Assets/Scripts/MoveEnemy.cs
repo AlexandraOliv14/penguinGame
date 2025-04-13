@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class MoveEnemy : MonoBehaviour
@@ -8,36 +9,55 @@ public class MoveEnemy : MonoBehaviour
 
     [SerializeField] private float velocidad;
 
+    private Animator anim;
+
     private bool moveRight = true;
 
-    private void Update()
+    private void Awake()
     {
-        if (Vector3.Distance(transform.position, finPos.transform.position) < 0.01f)
-        {
-            moveRight = false;
-            gameObject.transform.localScale = new Vector3(-0.6f, 0.6f, 0.6f);
-
-        }
-        else if (Vector3.Distance(transform.position, iniPose.transform.position) < 0.01f)
-        {
-            moveRight = true;
-            gameObject.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
-
-        }
-
-        if (moveRight)  MoveRight();
-        else MoveLeft();
-
+        anim = GetComponentInChildren<Animator>();
     }
 
-    private void MoveRight()
+    private void Start()
     {
-        gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, finPos.transform.position, Time.deltaTime * velocidad);
+        StartCoroutine(MoveLoop());
     }
 
-    private void MoveLeft()
+    private IEnumerator MoveLoop()
     {
-        gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, iniPose.transform.position, Time.deltaTime * velocidad);
+        while (true)
+        {
+            Vector3 targetPos = moveRight ? finPos.transform.position : iniPose.transform.position;
+
+            anim.SetBool("walk", true);
+
+            // Ajustar orientación
+            float scaleX = moveRight ? 0.6f : -0.6f;
+            transform.localScale = new Vector3(scaleX, 0.6f, 0.6f);
+
+            // Caminar hasta el extremo
+            while (Vector3.Distance(transform.position, targetPos) > 0.01f)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, targetPos, velocidad * Time.deltaTime);
+                yield return null;
+            }
+
+            // Detener movimiento
+            anim.SetBool("walk", false);
+
+            // Atacar
+            anim.SetTrigger("attack");
+
+            // Esperar a que comience la animación
+            while (!anim.GetCurrentAnimatorStateInfo(0).IsName("attack"))
+                yield return null;
+
+            // Esperar a que termine la animación
+            while (anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+                yield return null;
+
+            moveRight = !moveRight;
+        }
     }
 
 }
